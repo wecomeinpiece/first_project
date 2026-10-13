@@ -1,0 +1,132 @@
+Sub CreateNextSheetModified()
+    Dim wsSource As Worksheet
+    Dim wsNext As Worksheet
+    Dim N As Long
+    Dim M As Long
+    Dim nextRow As Long
+    
+    ' Шаг 1: Подготовка листов
+    On Error Resume Next
+    Set wsSource = ThisWorkbook.Sheets("Sheet1")
+    On Error GoTo 0
+    
+    If wsSource Is Nothing Then
+        MsgBox "Ошибка: Лист 'Sheet1' не найден в книге!", vbCritical
+        Exit Sub
+    End If
+    
+    ' Удаляем старый лист NEXT, если он существует
+    Application.DisplayAlerts = False
+    On Error Resume Next
+    ThisWorkbook.Sheets("NEXT").Delete
+    On Error GoTo 0
+    Application.DisplayAlerts = True
+    
+    ' Создаем новый чистый лист NEXT
+    Set wsNext = ThisWorkbook.Sheets.Add(After:=wsSource)
+    wsNext.Name = "NEXT"
+    
+    ' Переменная для ведения строки записи на листе NEXT
+    nextRow = 1
+    
+    ' Шаг 2: Переменная N (номер текущей строки для Sheet1), изначально 2
+    N = 2
+    
+    ' Шаг 3: Переменная M (счетчик записанных задач), изначально 0
+    M = 0
+
+' Метки для переходов по алгоритму
+Step4:
+    ' Шаг 4
+    wsNext.Cells(nextRow, "A").Value = wsSource.Cells(N, "B").Value
+    wsNext.Cells(nextRow, "B").Value = 1
+    M = M + 1
+    nextRow = nextRow + 1
+
+Step5:
+    ' Шаг 5
+    wsNext.Cells(nextRow, "A").Value = wsSource.Cells(N, "C").Value
+    wsNext.Cells(nextRow, "B").Value = 2
+    M = M + 1
+    nextRow = nextRow + 1
+
+Step6:
+    ' Шаг 6
+    wsNext.Cells(nextRow, "A").Value = wsSource.Cells(N, "D").Value
+    wsNext.Cells(nextRow, "B").Value = 3
+    M = M + 1
+    nextRow = nextRow + 1
+
+Step7:
+    ' Шаг 7
+    wsNext.Cells(nextRow, "A").Value = wsSource.Cells(N, "E").Value
+    wsNext.Cells(nextRow, "B").Value = 4
+    wsNext.Cells(nextRow, "E").Value = 0
+    M = M + 1
+    nextRow = nextRow + 1
+
+Step8:
+    ' Шаг 8
+    wsNext.Cells(nextRow, "A").Value = wsSource.Cells(N, "F").Value
+    wsNext.Cells(nextRow, "B").Value = 4
+    wsNext.Cells(nextRow, "D").Value = M
+    M = M + 1
+    nextRow = nextRow + 1
+
+Step9:
+    ' Шаг 9
+    wsNext.Cells(nextRow, "A").Value = wsSource.Cells(N, "G").Value
+    wsNext.Cells(nextRow, "B").Value = 4
+    wsNext.Cells(nextRow, "C").Value = wsSource.Cells(N, "K").Value
+    M = M + 1
+    nextRow = nextRow + 1
+
+Step10:
+    ' Шаг 10
+    wsNext.Cells(nextRow, "A").Value = wsSource.Cells(N, "H").Value
+    wsNext.Cells(nextRow, "B").Value = 5
+    wsNext.Cells(nextRow, "E").Value = 0
+    M = M + 1
+    nextRow = nextRow + 1
+
+Step11:
+    ' Шаг 11
+    wsNext.Cells(nextRow, "A").Value = wsSource.Cells(N, "I").Value
+    wsNext.Cells(nextRow, "B").Value = 5
+    wsNext.Cells(nextRow, "D").Value = M
+    M = M + 1
+    nextRow = nextRow + 1
+
+Step12:
+    ' Шаг 12
+    wsNext.Cells(nextRow, "A").Value = wsSource.Cells(N, "J").Value
+    wsNext.Cells(nextRow, "B").Value = 5
+    wsNext.Cells(nextRow, "D").Value = M
+    M = M + 1
+    nextRow = nextRow + 1
+
+    ' Шаг 13: Переход к следующей строке Sheet1
+    N = N + 1
+
+    ' Шаг 14: Проверка на пустую ячейку в столбце B листа Sheet1
+    If Trim(wsSource.Cells(N, "B").Value) = "" Then
+        MsgBox "Выполнение успешно завершено! Всего записано задач: " & M, vbInformation, "Успех"
+        Exit Sub
+    End If
+
+    ' Шаг 15: Если значение текущей строки в столбце D равно значению предыдущей строки в столбце D
+    If wsSource.Cells(N, "D").Value = wsSource.Cells(N - 1, "D").Value Then
+        GoTo Step9
+    End If
+
+    ' Шаг 16: Если значение текущей строки в столбце C равно значению предыдущей строки в столбце C
+    If wsSource.Cells(N, "C").Value = wsSource.Cells(N - 1, "C").Value Then
+        GoTo Step6
+    End If
+
+    ' Шаг 17: Переход по умолчанию на Шаг 5
+    GoTo Step5
+
+    ' Шаг 18: Резервный выход с ошибкой
+    MsgBox "Произошла непредвиденная ошибка алгоритма!", vbCritical, "Ошибка"
+End Sub
